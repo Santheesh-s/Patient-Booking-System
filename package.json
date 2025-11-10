@@ -12,7 +12,8 @@
     "build:server": "vite build --config vite.config.server.ts",
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
-    "typecheck": "tsc"
+    "typecheck": "tsc",  
+    "postinstall": "npm rebuild rollup"
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.3",
