@@ -312,7 +312,7 @@ async function sendEmail(payload: EmailPayload): Promise<boolean> {
     }
 
     const mailOptions = {
-      from: NOTIFICATION_CONFIG.email.from,
+      from: "Clinic <" + NOTIFICATION_CONFIG.email.from + ">",
       to: payload.to,
       subject: payload.subject,
       text: payload.body,
