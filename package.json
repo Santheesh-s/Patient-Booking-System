@@ -2,6 +2,9 @@
   "name": "fusion-starter",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "22.20.0"
+  },
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 8080 --strictPort",
     "build": "npm run build:client && npm run build:server",
