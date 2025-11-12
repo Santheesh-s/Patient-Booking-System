@@ -1,15 +1,12 @@
 [build]
-  command = "npm run build:client"
-  functions = "netlify/functions"
-  publish = "dist/spa"
-
-
-[functions]
-  external_node_modules = ["express"]
-  node_bundler = "esbuild"
+  # This is the correct command for Windows CMD
+  # It copies your 'server' folder into 'netlify/functions'
+  command = "xcopy server netlify\\functions\\server /E /I /Y"
   
+  functions = "netlify/functions"
+
 [[redirects]]
-  force = true
+  # This rule makes your API routes work
   from = "/api/*"
-  status = 200
   to = "/.netlify/functions/api/:splat"
+  status = 200

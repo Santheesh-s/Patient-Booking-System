@@ -15,6 +15,40 @@ import PatientDashboard from "./pages/PatientDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useEffect } from "react";
 
+// Runtime API base rewrite for cross-host setups (Firebase frontend + Netlify backend)
+// Set VITE_API_BASE_URL to your Netlify functions endpoint, e.g.:
+// VITE_API_BASE_URL="https://your-site.netlify.app/.netlify/functions/api"
+const API_BASE =  "https://app-for-patient.netlify.app/";
+if (typeof window !== "undefined" && API_BASE) {
+  try {
+    const originalFetch = window.fetch.bind(window);
+    (window as any).fetch = (input: RequestInfo, init?: RequestInit) => {
+      try {
+        if (typeof input === "string") {
+          if (input.startsWith("/api")) {
+            const base = API_BASE.endsWith("/") ? API_BASE.slice(0, -1) : API_BASE;
+            input = `${base}${input}`;
+          }
+        } else if (input instanceof Request) {
+          const url = input.url || "";
+          if (url.startsWith("/api")) {
+            const base = API_BASE.endsWith("/") ? API_BASE.slice(0, -1) : API_BASE;
+            // create a new Request with rewritten URL (preserve method/headers/body)
+            input = new Request(`${base}${url}`, input);
+          }
+        }
+      } catch (e) {
+        // fallback to original fetch if rewrite fails
+      }
+      return originalFetch(input as RequestInfo, init as RequestInit);
+    };
+    console.info("[API] Rewriting /api ->", API_BASE);
+  } catch {
+    /* ignore */
+  }
+}
+// --- end API base rewrite ---
+
 const queryClient = new QueryClient();
 
 const App = () => {
